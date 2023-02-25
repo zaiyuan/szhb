@@ -1,0 +1,3 @@
+composer require aliyuncs/oss-sdk-php  阿里云oss
+composer require predis/predis        redis缓存
+composer require niklasravnsborg/laravel-pdf 生成pdf
