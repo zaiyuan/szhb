@@ -20,4 +20,5 @@ class UploadController extends Controller
         }
         return $this->success($res['data']);
     }
+
 }
