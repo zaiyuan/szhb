@@ -17,7 +17,7 @@ class Wallet extends Model
     ];
     protected $guarded=[];
     protected $appends=['btc_qrcode','eth_qrcode','usdt_qrcode','det_qrcode'];
-
+    const SYSTEM_CURRENCY_TYPE="det";
     public static function getCurrencyTypes()
     {
         return ['btc','eth','usdt','det'];

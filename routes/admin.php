@@ -25,3 +25,4 @@ include __DIR__ . '/admin/announcement.php';
 include __DIR__ . '/admin/instruction.php';
 include __DIR__ . '/admin/recharge.php';
 include __DIR__ . '/admin/withdraw.php';
+include __DIR__ . '/admin/exchange.php';

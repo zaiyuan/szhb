@@ -42,20 +42,4 @@ class User extends Authenticatable
             ['currency_type'=>'DET','balance'=>$this->det_balance,'frozen'=>$this->det_frozen],
         ];
     }
-
-    /**
-     * 根据账号获取用户
-     * @param $account
-     * User: qiaohao
-     * Date: 2023/2/23 15:41
-     */
-    public static function getUserByAccount($account)
-    {
-        $type=StrLib::getAccountType($account);
-        if($type=="email"){
-            return User::where('email',$account)->first();
-        }else{
-            return User::where('mobile',$account)->first();
-        }
-    }
 }

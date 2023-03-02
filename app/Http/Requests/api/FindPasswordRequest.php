@@ -3,6 +3,7 @@
 namespace App\Http\Requests\api;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class FindPasswordRequest extends FormRequest
 {
@@ -24,8 +25,18 @@ class FindPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'account'=>['required'],
-            'code'=>['required'],
+            'login_type'=>[
+                'required',
+                Rule::in(['email','mobile'])
+            ],
+            'area_code'=>['requiredIf:login_type,mobile'],
+            'email' => [
+                'requiredIf:login_type,email',
+            ],
+            'mobile' => [
+                'requiredIf:login_type,mobile',
+            ],
+            'code'=>'required',
             'password'=>['required','confirmed']
         ];
     }

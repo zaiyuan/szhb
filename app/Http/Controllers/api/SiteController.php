@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\api\FindPasswordRequest;
 use App\Http\Requests\api\LoginRequest;
 use App\Http\Requests\api\RegisterRequest;
+use App\Http\Requests\api\SendCodeRequest;
 use App\lib\StrLib;
 use App\Models\User;
 use App\Services\UserService;
@@ -46,13 +47,13 @@ class SiteController extends Controller
      * User: qiaohao
      * Date: 2023/2/23 11:46
      */
-    public function sendCode($account)
+    public function sendCode(SendCodeRequest $request)
     {
-        $pos = strpos($account, '@');
-        if ($pos === false) {//电话
-            $res = (new UserService())->sendSmsCode($account);
+        $params=$request->input();
+        if ($params['login_type'] === 'mobile') {//电话
+            $res = (new UserService())->sendSmsCode($params['mobile']);
         } else {//邮箱
-            $res = (new UserService())->sendEmailCode($account);
+            $res = (new UserService())->sendEmailCode($params['email']);
         }
         return $this->success($res);
     }
@@ -66,11 +67,15 @@ class SiteController extends Controller
     public function findPassword(FindPasswordRequest $request)
     {
         $params=$request->input();
-        $res=(new UserService())->checkSmscode($params['account'],$params['code']);
+        if($params['login_type']=='mobile'){
+            $res=(new UserService())->checkSmscode($params['area_code'].$params['mobile'],$params['code']);
+        }else{
+            $res=(new UserService())->checkSmscode($params['email'],$params['code']);
+        }
         if(!$res){
             throw new Exception("验证码无效");
         }
-        $user=User::getUserByAccount($params['account']);
+        $user=User::where($params['login_type'],$params[$params['login_type']])->first();
         if(!$user){
             throw new Exception("账号不存在");
         }

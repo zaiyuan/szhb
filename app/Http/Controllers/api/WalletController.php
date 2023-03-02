@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\api\ExchangeRequest;
 use App\Http\Requests\api\RechargeRequest;
 use App\Http\Requests\api\WithdrawRequest;
+use App\Models\ExchangeRecord;
 use App\Models\RechargeRecord;
 use App\Models\Wallet;
 use App\Models\WithdrawRecord;
@@ -71,6 +73,36 @@ class WalletController extends Controller
                 'currency_address'=>$wallet[$params['currency_type'].'_address'],
                 'money'=>$params['money'],
                 'status'=>WithdrawRecord::STATUS_AUDITING
+            ]);
+            DB::commit();
+            return $this->success([]);
+        }catch (\Exception $e){
+            DB::rollBack();
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * 兑换
+     * User: qiaohao
+     * Date: 2023/2/26 18:13
+     */
+    public function exchange(ExchangeRequest $request)
+    {
+        $params=$request->input();
+        $user=Auth::user();
+        $balance_key=$params['from_currency_type']."_balance";
+        if($user[$balance_key]<$params['money']){
+            throw new \Exception("余额不足");
+        }
+        DB::beginTransaction();
+        try{
+            ExchangeRecord::create([
+                'user_id'=>$user['id'],
+                'from_currency_type'=>$params['from_currency_type'],
+                'to_currency_type'=>Wallet::SYSTEM_CURRENCY_TYPE,
+                'money'=>$params['money'],
+                'status'=>ExchangeRecord::STATUS_AUDITING
             ]);
             DB::commit();
             return $this->success([]);

@@ -2,10 +2,11 @@
 
 namespace App\Http\Requests\api;
 
+use App\Models\Wallet;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class LoginRequest extends FormRequest
+class ExchangeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,17 +26,11 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'login_type'=>[
+            'from_currency_type'=>[
                 'required',
-                Rule::in(['email','mobile'])
+                Rule::in(Wallet::getCurrencyTypes())
             ],
-            'email' => [
-                'requiredIf:login_type,email',
-            ],
-            'mobile' => [
-                'requiredIf:login_type,mobile',
-            ],
-            'password'=>['required']
+            'money'=>'required|numeric'
         ];
     }
 }

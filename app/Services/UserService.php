@@ -15,32 +15,32 @@ use PHPUnit\Util\Exception;
 
 class UserService
 {
-    //登陆
+    //注册
     public function register($params)
     {
-        //判断电话号码还是邮箱
-        $pos=strpos($params['account'],'@');
-        if($pos===false){//电话
-            $login_type="mobile";
-            $user=User::where('mobile',$params['account'])->first();
+        if($params['login_type']==='mobile'){
+            $user=User::where('mobile',$params['mobile'])->first();
         }else{//邮箱
-            $login_type="email";
-            $user=User::where('email',$params['account'])->first();
+            $user=User::where('email',$params['email'])->first();
         }
         if($user){
             throw new \Exception("用户已存在,请直接登录");
         }
+
         //短信验证码是否正确
-        $res=$this->checkSmscode($params['account'],$params['code']);
+        if($params['login_type']==='mobile'){
+            $res=$this->checkSmscode($params['area_code'].$params['mobile'],$params['code']);
+        }else{
+            $res=$this->checkSmscode($params['email'],$params['code']);
+        }
         if(!$res) throw new \Exception("短信验证码无效");
 
         $wallet=Wallet::getRandomWallet();
         if(!$wallet) throw new Exception("网站维护中");
         //保存用户
         $user=User::create([
-            $login_type=>$params['account'],
+            $params['login_type']=>$params[$params['login_type']],
             'password'=>Crypt::encryptString($params['password']),
-            'area_code'=>$params['area_code'],
             'wallet_id'=>$wallet['id']
         ]);
 
@@ -55,12 +55,7 @@ class UserService
     public function login($params)
     {
         //判断电话号码还是邮箱
-        $pos=strpos($params['account'],'@');
-        if($pos===false){//电话
-            $user=User::where('mobile',$params['account'])->first();
-        }else{//邮箱
-            $user=User::where('email',$params['account'])->first();
-        }
+        $user=User::where('mobile',$params[$params['login_type']])->first();
         if(!$user) throw new \Exception("账号不存在,请先去注册");
         if(Crypt::decryptString($user['password'])!=$params['password']){
             throw new \Exception("账号密码错误");
@@ -79,13 +74,12 @@ class UserService
     {
         $pageParam=pageHelper::initPageParam($params['page'],$params['pageSize']);
         $where=[];
-        if(isset($params['account']) && $params['account']){
-            $where[]=[function($query)use($params){
-                $query->where('mobile','like',"%{$params['account']}%")
-                ->orWhere('email','like',"%{$params['account']}%");
-            }];
+        if(isset($params['mobile']) && $params['mobile']){
+            $where[]=['mobile','=',$params['mobile']];
         }
-
+        if(isset($params['email']) && $params['email']){
+            $where[]=['email','=',$params['email']];
+        }
         $count=User::where($where)->count();
         $list=User::where($where)
             ->select('*')

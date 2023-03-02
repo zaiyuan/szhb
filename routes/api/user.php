@@ -17,7 +17,7 @@ Route::post('/register',[\App\Http\Controllers\api\SiteController::class,'regist
 Route::post('/login',[\App\Http\Controllers\api\SiteController::class,'login']);
 Route::post('/fake_login',[\App\Http\Controllers\api\SiteController::class,'fake_login']);
 Route::post('/findPassword',[\App\Http\Controllers\api\SiteController::class,'findPassword']);
-Route::get('/sendSms/{mobile}',[\App\Http\Controllers\api\SiteController::class,'sendCode']);
+Route::post('/sendCode',[\App\Http\Controllers\api\SiteController::class,'sendCode']);
 
 Route::middleware(['auth'])->group(function(){
     Route::get('/userinfo',[\App\Http\Controllers\api\SiteController::class,'userinfo']);
