@@ -21,4 +21,5 @@ include __DIR__ . '/api/user.php';
 include __DIR__ . '/api/home.php';
 include __DIR__ . '/api/wallet.php';
 include __DIR__ . '/common/util.php';
+include __DIR__ . '/common/market.php';
 
