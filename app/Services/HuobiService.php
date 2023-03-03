@@ -44,6 +44,7 @@ class HuobiService
                 $row['change']=round(($row['close']-$row['open'])/$row['open'],4)*100;
                 $row['change']= $row['change']<=0? $row['change']:'+'. $row['change'];
                 $row['change'].='%';
+                $row['symbol']=strtoupper(explode('usdt',$row['symbol'])[0].'usdt');
                 $data[]=$row;
             }
         }

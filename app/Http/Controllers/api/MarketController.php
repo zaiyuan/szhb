@@ -23,7 +23,7 @@ class MarketController extends Controller
     public function market_tickers()
     {
         $service=new HuobiService();
-        $res=$service->market_tickers();
+        $res=$service->getMarketTickersCache();
         return $this->success($res);
     }
 
