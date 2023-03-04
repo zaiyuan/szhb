@@ -6,10 +6,9 @@ class Sms
 {
     public static function extract_msgid($resp)
     {
-        preg_match('/mtmsgid=(.*?)&/', $resp, $re);
+        preg_match('/mtstat=(.*?)&/', $resp, $re);
         if (!empty($re) && count($re) >= 2)
             return $re[1];
-
         return "";
     }
 
@@ -28,9 +27,15 @@ class Sms
         // 建议记录 $resp 到日志文件，$resp里有详细的出错信息
         try {
             $resp = file_get_contents($api);
+            $res= self::extract_msgid($resp);
+            if($res=='ACCEPT'){
+                return true;
+            }else{
+                throw new \Exception("发送失败");
+            }
         } catch(\Exception $e){
             throw new \Exception($e->getMessage()) ;
         }
-        return self::extract_msgid($resp);
+
     }
 }
