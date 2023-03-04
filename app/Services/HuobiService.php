@@ -64,7 +64,7 @@ class HuobiService
 
     public function kData($symbol,$period,$size=150)
     {
-        $action="market/tickers";
+        $action="market/history/kline";
         $url=$this->host.$action."?symbol={$symbol}&period={$period}&size={$size}";
         $httpRequest=new HttpRequest();
         $httpRequest->url=$url;
