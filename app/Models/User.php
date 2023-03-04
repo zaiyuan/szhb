@@ -39,7 +39,7 @@ class User extends Authenticatable
             ['currency_type'=>'BTC','balance'=>$this->btc_balance,'frozen'=>$this->btc_frozen],
             ['currency_type'=>'ETH','balance'=>$this->eth_balance,'frozen'=>$this->eth_frozen],
             ['currency_type'=>'USDT','balance'=>$this->usdt_balance,'frozen'=>$this->usdt_frozen],
-            ['currency_type'=>'DET','balance'=>$this->det_balance,'frozen'=>$this->det_frozen],
+            ['currency_type'=>'AIC','balance'=>$this->aic_balance,'frozen'=>$this->aic_frozen],
         ];
     }
 }

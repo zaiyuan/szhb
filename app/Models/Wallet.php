@@ -16,11 +16,11 @@ class Wallet extends Model
         'updated_at'=>'datetime:Y-m-d H:i:s',
     ];
     protected $guarded=[];
-    protected $appends=['btc_qrcode','eth_qrcode','usdt_qrcode','det_qrcode'];
-    const SYSTEM_CURRENCY_TYPE="det";
+    protected $appends=['btc_qrcode','eth_qrcode','usdt_qrcode','aic_qrcode'];
+    const SYSTEM_CURRENCY_TYPE="aic";
     public static function getCurrencyTypes()
     {
-        return ['btc','eth','usdt','det'];
+        return ['btc','eth','usdt','aic'];
     }
     /**
      * btc_qrcode
@@ -77,19 +77,19 @@ class Wallet extends Model
     }
 
     /**
-     * det_qrcode
+     * aic_qrcode
      * @return string
      * User: qiaohao
      * Date: 2023/2/22 10:22
      */
-    public function getDetQrcodeAttribute()
+    public function getAicQrcodeAttribute()
     {
-        $filename="wallet_qrcode/{$this->id}_det.png";
+        $filename="wallet_qrcode/{$this->id}_aic.png";
         $qrcode=public_path($filename);
         $uploadLib=UploadLib::getUploadInstance();
         if(!file_exists($qrcode)){
             $img=new \QRcode();
-            $img->png($this->det_address,$filename,QR_ECLEVEL_L,5,2,false);
+            $img->png($this->aic_address,$filename,QR_ECLEVEL_L,5,2,false);
         }
         return $uploadLib->fullImage($filename);
     }
