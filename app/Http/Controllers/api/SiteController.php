@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Helpers\EmailHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\api\FindPasswordRequest;
 use App\Http\Requests\api\LoginRequest;
@@ -14,6 +15,7 @@ use App\Tools\upload\UploadLib;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 
 class SiteController extends Controller
@@ -49,13 +51,17 @@ class SiteController extends Controller
      */
     public function sendCode(SendCodeRequest $request)
     {
-        $params=$request->input();
-        if ($params['login_type'] === 'mobile') {//电话
-            $res = (new UserService())->sendSmsCode($params['mobile']);
-        } else {//邮箱
-            $res = (new UserService())->sendEmailCode($params['email']);
+        try{
+            $params=$request->input();
+            if ($params['login_type'] === 'mobile') {//电话
+                $res = (new UserService())->sendSmsCode($params['area_code'].$params['mobile']);
+            } else {//邮箱
+                $res = (new UserService())->sendEmailCode($params['email']);
+            }
+            return $this->success($res);
+        }catch(Exception $e){
+            throw new Exception($e->getMessage());
         }
-        return $this->success($res);
     }
 
 

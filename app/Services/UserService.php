@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Helpers\EmailHelper;
 use App\Helpers\JwtHelper;
 use App\Helpers\pageHelper;
 use App\lib\Sms;
@@ -99,7 +100,7 @@ class UserService
     {
         $code=StrLib::getSmsCode();
         $smsConfig=config('sms');
-        $content="您的短信验证码是{$code}，5分钟内有效。";
+        $content="您的验证码为{$code}，5分钟内有效，请勿告诉他人！！！";
 
         $res=Sms::send($smsConfig['cpid'],$smsConfig['cppwd'],$mobile,$content);
         //缓存验证码
@@ -116,12 +117,11 @@ class UserService
     {
         $code=StrLib::getSmsCode();
         $smsConfig=config('sms');
-        $content="您的短信验证码是{$code}，5分钟内有效。";
 
-        $res=true;
+        (new EmailHelper())->sendCode($email,'游客',$code);
         //缓存验证码
         Cache::put($smsConfig['sms_code_pre'].$email,$code,now()->addMinutes(5));
-        return $res;
+        return true;
     }
 
     /**
@@ -136,7 +136,7 @@ class UserService
         }
         $smsConfig=config('sms');
         $c=Cache::get($smsConfig['sms_code_pre'].$mobile);
-        if(!$c && $c==$code){
+        if($c && $c==$code){
             return true;
         }
         return false;

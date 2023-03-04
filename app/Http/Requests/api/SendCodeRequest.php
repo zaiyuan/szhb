@@ -35,6 +35,9 @@ class SendCodeRequest extends FormRequest
             'mobile' => [
                 'requiredIf:login_type,mobile',
             ],
+            'area_code'=>[
+                'requiredIf:login_type,mobile',
+            ],
         ];
     }
 }

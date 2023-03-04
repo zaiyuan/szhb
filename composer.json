@@ -7,7 +7,9 @@
     "require": {
         "php": "^7.3|^8.0",
         "ext-json": "*",
+        "ext-libxml": "*",
         "ext-openssl": "*",
+        "ext-simplexml": "*",
         "aliyuncs/oss-sdk-php": "^2.6",
         "firebase/php-jwt": "^6.3",
         "fruitcake/laravel-cors": "^2.0",
@@ -16,9 +18,8 @@
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
         "niklasravnsborg/laravel-pdf": "^4.1",
-        "predis/predis": "^2.0",
-      "ext-libxml": "*",
-        "ext-simplexml": "*"
+        "phpmailer/phpmailer": "^6.7",
+        "predis/predis": "^2.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
