@@ -28,7 +28,7 @@ class AddCurrencyRequest extends FormRequest
             'user_id'=>['required'],
             'currency_type'=>[
                 'required',
-                Rule::in(['btc','teh','usdt','bxt'])
+                Rule::in(['btc','teh','usdt','aic'])
             ],
             'plus_or_minus'=>[
                 'required',
