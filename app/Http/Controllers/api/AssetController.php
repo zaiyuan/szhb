@@ -21,7 +21,7 @@ class AssetController extends Controller
     public function myAsset()
     {
         $user=Auth::user();
-        $user->append(['currency_list']);
+        $user->append(['currency_list','total_asset']);
 
         $list=$user['currency_list'];
 

@@ -45,7 +45,7 @@ class User extends Authenticatable
     }
 
     /**
-     * 总资产,换算成usdt
+     * 总资产,换算成usdt total_asset
      * User: qiaohao
      * Date: 2023/3/4 21:43
      */
