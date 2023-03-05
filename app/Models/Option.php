@@ -35,7 +35,7 @@ class Option extends Model
     }
 
     //获取缓存
-    public static function getCacheConfig()
+    public static function getCacheConfig($names=[])
     {
         $key=config('cache.option_cache');
         if(Cache::has($key)){
@@ -50,6 +50,29 @@ class Option extends Model
             $uploadlib=UploadLib::getUploadInstance();
             $list['exchange_cover']=$uploadlib->fullImage($list['exchange_cover']);
         }
-        return $list;
+        if(empty($names)){
+            return $list;
+        }else{
+            $data=[];
+            foreach($list as $key=>$row){
+                if(in_array($key,$names)){
+                    $data[$key]=$row;
+                }
+            }
+            return $data;
+        }
+    }
+
+    /**
+     * 获取缓存配置
+     * @param $name
+     * @return mixed
+     * User: qiaohao
+     * Date: 2023/3/4 21:51
+     */
+    public static function getCacheOptionByName($name)
+    {
+        $list=self::getCacheConfig();
+        return $list[$name];
     }
 }

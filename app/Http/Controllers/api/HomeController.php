@@ -79,7 +79,7 @@ class HomeController extends Controller
     public function getConfig(Request $request)
     {
         $names=$request->input('name',[]);
-        $configs=Option::getCacheConfig();
+        $configs=Option::getCacheConfig($names);
         return $this->success($configs);
     }
 }

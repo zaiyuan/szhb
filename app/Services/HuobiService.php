@@ -83,7 +83,31 @@ class HuobiService
         $data=$this->kData($symbol,$period);
         Cache::put($key,json_encode($data),now()->addMinutes(1));
         return $data;
+    }
 
-        $res=$this->kData($symbol,$period);
+    //获取btcusdt交易对
+    public static function btcusdtTicker()
+    {
+        $btcusdt_ticker=Cache::get('btcusdt_ticker');
+        if(!$btcusdt_ticker){
+            $data=(new HuobiService())->market_tickers();
+            $symbol_data=array_column($data,null,'symbol');
+            $btcusdt_ticker=$symbol_data['BTC/USDT']['close'];
+            Cache::put('btcusdt_ticker',$btcusdt_ticker,now()->addMinutes(1));
+        }
+        return $btcusdt_ticker;
+    }
+
+    //ethusdt交易对
+    public static function ethusdtTicker()
+    {
+        $ethusdt_ticker=Cache::get('ethusdt_ticker');
+        if(!$ethusdt_ticker){
+            $data=(new HuobiService())->market_tickers();
+            $symbol_data=array_column($data,null,'symbol');
+            $ethusdt_ticker=$symbol_data['ETH/USDT']['close'];
+            Cache::put('ethusdt_ticker',$ethusdt_ticker,now()->addMinutes(1));
+        }
+        return $ethusdt_ticker;
     }
 }

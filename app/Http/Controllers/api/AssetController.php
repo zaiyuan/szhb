@@ -4,8 +4,10 @@ namespace App\Http\Controllers\api;
 
 use App\Helpers\pageHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Option;
 use App\Models\RechargeRecord;
 use App\Models\WithdrawRecord;
+use App\Services\HuobiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,8 +24,21 @@ class AssetController extends Controller
         $user->append(['currency_list']);
 
         $list=$user['currency_list'];
+
+        $btcusdt_ticker=HuobiService::btcusdtTicker();
+        $ethusdt_ticker=HuobiService::ethusdtTicker();
+        $aicusdt_ticker=Option::getCacheOptionByName('aicusdt');
         foreach($list as &$row){
             $row['total']=$row['balance']+$row['frozen'];
+            if($row['currency_type']=='BTC'){
+                $row['convert_usdt']=round($row['total']/$btcusdt_ticker,4);
+            }else  if($row['currency_type']=='ETH'){
+                $row['convert_usdt']=round($row['total']/$ethusdt_ticker,4);
+            }else  if($row['currency_type']=='AIC'){
+                $row['convert_usdt']=round($row['total']/$aicusdt_ticker,4);
+            }else  if($row['currency_type']=='USDT'){
+                $row['convert_usdt']=$row['total'];
+            }
         }
         return $this->success([
             'list'=>$list
